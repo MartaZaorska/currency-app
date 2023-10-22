@@ -22,35 +22,37 @@ export function getStartAndEndDates(days = 7, endDate = Date.now()){
 }
 
 export function formatCurrencyData(data, currency){
-  const labels = Object.keys(data.rates).map(date => formatDate(date));
+  const labels = Object.keys(data.quotes).map(date => formatDate(date));
   const rates = {};
 
-  const ratesData = Object.values(data.rates);
+  const ratesData = Object.values(data.quotes);
+  const [ prev_day ] = getStartAndEndDates(1, Date.now());
 
-  Object.entries(currency).filter(([symbol]) => symbol !== data.base).forEach(([symbol, name]) => {
+  Object.entries(currency).filter(([symbol]) => symbol !== data.source).forEach(([symbol, name]) => {
     rates[symbol] = {
       datasets: [{ data: [], label: symbol }],
       symbol,
       name
     };
 
+    const key = `${data.source}${symbol}`;
+
     ratesData.forEach(ratesItem => 
-      rates[symbol].datasets[0].data.push(formatRateValue(ratesItem[symbol], 5))
+      rates[symbol].datasets[0].data.push(formatRateValue(ratesItem[key], 5))
     );
 
-    const [ prevDay ] = getStartAndEndDates(1, Date.now());
-    const currentValue = formatRateValue(data.rates[data.end_date][symbol], 4);
-    const prevDayValue = formatRateValue(data.rates[prevDay][symbol], 4);
+    const currentValue = formatRateValue(data.quotes[data.end_date][key], 4);
+    const prevDayValue = formatRateValue(data.quotes[prev_day][key], 4);
 
     rates[symbol].currentValue = currentValue;
     rates[symbol].change = getChangeRate(currentValue, prevDayValue);
   });
-
+  
   return { 
     labels, 
     rates: Object.values(rates), 
     updatedAt: formatDate(data.end_date), 
-    base: data.base 
+    base: data.source
   };
 }
 

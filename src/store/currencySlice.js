@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import data from '../data';
 
 const initialState = {
   chart: "EUR",
@@ -17,7 +18,8 @@ export const fetchCurrency = createAsyncThunk('currency/fetchCurrency', async (s
     const { CURRENCY_LIST } = await import("../data/constants");
 
     const [startDate, endDate] = getStartAndEndDates();
-    const data = await fetchData(`https://api.exchangerate.host/timeseries?base=${symbol}&start_date=${startDate}&end_date=${endDate}`);
+    const data = await fetchData(`https://api.apilayer.com/currency_data/timeframe?source=${symbol}&start_date=${startDate}&end_date=${endDate}`);
+    
     return formatCurrencyData(data, CURRENCY_LIST);
   }catch(err){
     return thunkAPI.rejectWithValue(err);
