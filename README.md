@@ -14,7 +14,7 @@
 
 The application which gives the user a check of the course for many currencies. It has a currency calculator and a chart showing the value of the exchange rate from the last 7 days.
 An application created using React and React Redux (@reduxjs/toolkit).
-The API data used on the site to download the exchange rate comes from [exchangerate.host](https://exchangerate.host/).
+The API data used on the site to download the exchange rate comes from [APILayer](https://apilayer.com/marketplace/currency_data-api).
 
 ## Demo
 
